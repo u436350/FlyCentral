@@ -6,18 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlyCentral – Travel Agency Platform</title>
     <meta name="description" content="FlyCentral – Die professionelle SaaS-Plattform für Reisebüros" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0d9488" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FlyCentral" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <!-- Open Graph für Social Sharing -->
+    <meta property="og:title" content="FlyCentral – Travel Agency Platform" />
+    <meta property="og:description" content="Die professionelle SaaS-Plattform für Reisebüros" />
+    <meta property="og:type" content="website" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!--
-      Tawk.to Live Chat
-      Replace TAWK_PROPERTY_ID and TAWK_WIDGET_ID with your own from tawk.to dashboard.
-      Sign up free at: https://www.tawk.to
-    -->
-    <script type="text/javascript">
-      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+            .catch(err => console.log('⚠️ SW registration failed:', err));
+        });
+      }
+    </script>
+
       (function(){
         // Uncomment and replace with your own IDs from tawk.to:
         // var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];

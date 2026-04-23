@@ -22,6 +22,7 @@ import AngebotPage from './pages/AngebotPage'
 import GroupBookingsPage from './pages/GroupBookingsPage'
 import PushNotificationsPage from './pages/PushNotificationsPage'
 import CalendarPage from './pages/CalendarPage'
+import HotelsPage from './pages/HotelsPage'
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
 
@@ -52,6 +53,7 @@ export default function App() {
             <Route path="visa"             element={<PrivateRoute roles={['agent','supervisor','admin']}><VisaPage /></PrivateRoute>} />
             <Route path="group-bookings"   element={<PrivateRoute roles={['agent','supervisor','admin']}><GroupBookingsPage /></PrivateRoute>} />
             <Route path="calendar"         element={<PrivateRoute roles={['agent','supervisor','admin']}><CalendarPage /></PrivateRoute>} />
+            <Route path="hotels"           element={<PrivateRoute roles={['agent','supervisor','admin']}><HotelsPage /></PrivateRoute>} />
             <Route path="push"             element={<PrivateRoute roles={['agent','supervisor','admin','finance']}><PushNotificationsPage /></PrivateRoute>} />
             <Route path="fare-watch"       element={<PrivateRoute roles={['agent','supervisor','admin']}><FareWatchPage /></PrivateRoute>} />
             <Route path="analytics"        element={<PrivateRoute roles={['agent','supervisor','finance','admin']}><AnalyticsPage /></PrivateRoute>} />

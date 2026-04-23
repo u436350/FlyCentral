@@ -1,14 +1,16 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
-import { Plane, BookOpen, Bell, BarChart2, CreditCard, Shield, Home, User, LogOut, Users, Package, Globe, FileText, Euro, Users2, MessageCircle, Calendar } from 'lucide-react'
+import { Plane, BookOpen, Bell, BarChart2, CreditCard, Shield, Home, User, LogOut, Users, Package, Globe, FileText, Euro, Users2, MessageCircle, Calendar, Building2, Moon, Sun } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
 import AIChat from './AIChat'
+import { useThemeStore } from '../store/themeStore'
 
 export default function Layout() {
   const { email, role, logout } = useAuthStore()
   const { t } = useTranslation()
   const nav = useNavigate()
+  const { isDark, toggleDark } = useThemeStore()
 
   const NAV = [
     { to: '/',               label: t('nav.dashboard'),   icon: Home,       roles: ['agent','supervisor','finance','admin'] },
@@ -23,6 +25,7 @@ export default function Layout() {
     { to: '/commissions',    label: 'Provisionen',         icon: Euro,       roles: ['supervisor','finance','admin'] },
     { to: '/fare-watch',     label: t('nav.fareWatch'),    icon: Bell,       roles: ['agent','supervisor','admin'] },
     { to: '/analytics',      label: t('nav.analytics'),    icon: BarChart2,  roles: ['agent','supervisor','finance','admin'] },
+    { to: '/hotels',         label: 'Hotels',              icon: Building2,  roles: ['agent','supervisor','admin'] },
     { to: '/push',           label: 'Benachrichtigungen',  icon: Bell,       roles: ['agent','supervisor','admin','finance'] },
     { to: '/billing',        label: t('nav.billing'),      icon: CreditCard, roles: ['finance','admin'] },
     { to: '/admin',          label: t('nav.admin'),        icon: Shield,     roles: ['admin'] },
@@ -36,7 +39,7 @@ export default function Layout() {
   const visible = NAV.filter(n => n.roles.includes(role))
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 flex flex-col">
       {/* Top Nav */}
       <nav className="bg-gradient-to-r from-teal-700 to-teal-500 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 flex items-center gap-1 h-14">
@@ -71,6 +74,13 @@ export default function Layout() {
             >
               <User size={15} />
             </NavLink>
+            <button
+              onClick={toggleDark}
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-teal-100 hover:bg-white/10 hover:text-white transition-colors"
+              title={isDark ? 'Hell' : 'Dunkel'}
+            >
+              {isDark ? <Sun size={16}/> : <Moon size={16}/>}
+            </button>
             <button
               onClick={handleLogout}
               className="flex items-center gap-1 text-teal-100 hover:text-white text-sm transition-colors"

@@ -3,6 +3,9 @@ import api from '../lib/api'
 import Card from '../components/Card'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, PieChart, Pie, Cell } from 'recharts'
 import { useAuthStore } from '../store/authStore'
+import { Download } from 'lucide-react'
+
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 export default function AnalyticsPage() {
   const { role } = useAuthStore()
@@ -48,7 +51,16 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">📊 Analytics & Reports</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">📊 Analytics & Reports</h1>
+        <a
+          href={`${API_URL}/api/analytics/export?format=csv`}
+          download="flycentral-export.csv"
+          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          <Download size={16}/> CSV Export
+        </a>
+      </div>
 
       {isLoading && <p className="text-gray-500 text-sm">Lade…</p>}
 

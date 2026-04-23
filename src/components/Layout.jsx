@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
-import { Plane, BookOpen, Bell, BarChart2, CreditCard, Shield, Home, User, LogOut } from 'lucide-react'
+import { Plane, BookOpen, Bell, BarChart2, CreditCard, Shield, Home, User, LogOut, Users, Package, Globe, FileText, Euro, Users2, MessageCircle, Calendar } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
+import AIChat from './AIChat'
 
 export default function Layout() {
   const { email, role, logout } = useAuthStore()
@@ -10,14 +11,21 @@ export default function Layout() {
   const nav = useNavigate()
 
   const NAV = [
-    { to: '/',           label: t('nav.dashboard'),  icon: Home,      roles: ['agent','supervisor','finance','admin'] },
-    { to: '/search',     label: t('nav.search'),      icon: Plane,     roles: ['agent','supervisor','admin'] },
-    { to: '/bookings',   label: t('nav.bookings'),    icon: BookOpen,  roles: ['agent','supervisor','admin'] },
-    { to: '/fare-watch', label: t('nav.fareWatch'),   icon: Bell,      roles: ['agent','supervisor','admin'] },
-    { to: '/analytics',  label: t('nav.analytics'),   icon: BarChart2, roles: ['agent','supervisor','finance','admin'] },
-    { to: '/alerts',     label: t('nav.alerts'),      icon: Bell,      roles: ['agent','supervisor','admin'] },
-    { to: '/billing',    label: t('nav.billing'),     icon: CreditCard, roles: ['finance','admin'] },
-    { to: '/admin',      label: t('nav.admin'),       icon: Shield,    roles: ['admin'] },
+    { to: '/',               label: t('nav.dashboard'),   icon: Home,       roles: ['agent','supervisor','finance','admin'] },
+    { to: '/search',         label: t('nav.search'),       icon: Plane,      roles: ['agent','supervisor','admin'] },
+    { to: '/bookings',       label: t('nav.bookings'),     icon: BookOpen,   roles: ['agent','supervisor','admin'] },
+    { to: '/customers',      label: 'Kunden',              icon: Users,      roles: ['agent','supervisor','admin'] },
+    { to: '/packages',       label: 'Pakete',              icon: Package,    roles: ['agent','supervisor','admin'] },
+    { to: '/group-bookings', label: 'Gruppen',             icon: Users2,     roles: ['agent','supervisor','admin'] },
+    { to: '/calendar',       label: 'Kalender',            icon: Calendar,   roles: ['agent','supervisor','admin'] },
+    { to: '/angebot',        label: 'Angebot',             icon: FileText,   roles: ['agent','supervisor','admin'] },
+    { to: '/visa',           label: 'Visa',                icon: Globe,      roles: ['agent','supervisor','admin'] },
+    { to: '/commissions',    label: 'Provisionen',         icon: Euro,       roles: ['supervisor','finance','admin'] },
+    { to: '/fare-watch',     label: t('nav.fareWatch'),    icon: Bell,       roles: ['agent','supervisor','admin'] },
+    { to: '/analytics',      label: t('nav.analytics'),    icon: BarChart2,  roles: ['agent','supervisor','finance','admin'] },
+    { to: '/push',           label: 'Benachrichtigungen',  icon: Bell,       roles: ['agent','supervisor','admin','finance'] },
+    { to: '/billing',        label: t('nav.billing'),      icon: CreditCard, roles: ['finance','admin'] },
+    { to: '/admin',          label: t('nav.admin'),        icon: Shield,     roles: ['admin'] },
   ]
 
   function handleLogout() {
@@ -77,6 +85,9 @@ export default function Layout() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         <Outlet />
       </main>
+
+      {/* AI Chat Widget */}
+      <AIChat />
     </div>
   )
 }

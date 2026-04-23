@@ -14,6 +14,14 @@ import AlertsPage from './pages/AlertsPage'
 import BillingPage from './pages/BillingPage'
 import AdminPage from './pages/AdminPage'
 import ProfilePage from './pages/ProfilePage'
+import CustomersPage from './pages/CustomersPage'
+import PackagesPage from './pages/PackagesPage'
+import CommissionsPage from './pages/CommissionsPage'
+import VisaPage from './pages/VisaPage'
+import AngebotPage from './pages/AngebotPage'
+import GroupBookingsPage from './pages/GroupBookingsPage'
+import PushNotificationsPage from './pages/PushNotificationsPage'
+import CalendarPage from './pages/CalendarPage'
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
 
@@ -37,6 +45,14 @@ export default function App() {
             <Route index element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
             <Route path="search"           element={<PrivateRoute roles={['agent','supervisor','admin']}><SearchPage /></PrivateRoute>} />
             <Route path="bookings"         element={<PrivateRoute roles={['agent','supervisor','admin']}><BookingsPage /></PrivateRoute>} />
+            <Route path="customers"        element={<PrivateRoute roles={['agent','supervisor','admin']}><CustomersPage /></PrivateRoute>} />
+            <Route path="packages"         element={<PrivateRoute roles={['agent','supervisor','admin']}><PackagesPage /></PrivateRoute>} />
+            <Route path="angebot"          element={<PrivateRoute roles={['agent','supervisor','admin']}><AngebotPage /></PrivateRoute>} />
+            <Route path="commissions"      element={<PrivateRoute roles={['supervisor','finance','admin']}><CommissionsPage /></PrivateRoute>} />
+            <Route path="visa"             element={<PrivateRoute roles={['agent','supervisor','admin']}><VisaPage /></PrivateRoute>} />
+            <Route path="group-bookings"   element={<PrivateRoute roles={['agent','supervisor','admin']}><GroupBookingsPage /></PrivateRoute>} />
+            <Route path="calendar"         element={<PrivateRoute roles={['agent','supervisor','admin']}><CalendarPage /></PrivateRoute>} />
+            <Route path="push"             element={<PrivateRoute roles={['agent','supervisor','admin','finance']}><PushNotificationsPage /></PrivateRoute>} />
             <Route path="fare-watch"       element={<PrivateRoute roles={['agent','supervisor','admin']}><FareWatchPage /></PrivateRoute>} />
             <Route path="analytics"        element={<PrivateRoute roles={['agent','supervisor','finance','admin']}><AnalyticsPage /></PrivateRoute>} />
             <Route path="alerts"           element={<PrivateRoute roles={['agent','supervisor','admin']}><AlertsPage /></PrivateRoute>} />

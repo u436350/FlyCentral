@@ -1,7 +1,10 @@
-const CACHE_NAME = 'flycentral-v2';
+const BASE_PATH = '/FlyCentral';
+const CACHE_NAME = 'flycentral-v3';
 const STATIC_CACHE = [
-  '/',
-  '/index.html',
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/manifest.json`,
+  `${BASE_PATH}/icons/icon-192.png`,
 ];
 
 self.addEventListener('install', (e) => {
@@ -22,6 +25,21 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (!e.request.url.startsWith(self.location.origin)) return;
+
+  // Always try network first for navigation requests to avoid stale HTML shell.
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(`${BASE_PATH}/index.html`, clone));
+          return response;
+        })
+        .catch(() => caches.match(`${BASE_PATH}/index.html`))
+    );
+    return;
+  }
+
   if (e.request.url.includes('/api/')) {
     // API: Network first, no cache
     e.respondWith(
@@ -53,8 +71,8 @@ self.addEventListener('push', (e) => {
   e.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: '/icons/icon-192.png',
-      badge: '/icons/badge-72.png',
+      icon: `${BASE_PATH}/icons/icon-192.png`,
+      badge: `${BASE_PATH}/icons/icon-192.png`,
       tag: data.tag || 'flycentral',
       requireInteraction: data.requireInteraction || false,
       data: data.url ? { url: data.url } : {},

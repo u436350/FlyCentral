@@ -1,21 +1,24 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
 import { Plane, BookOpen, Bell, BarChart2, CreditCard, Shield, Home, User, LogOut } from 'lucide-react'
-
-const NAV = [
-  { to: '/',           label: 'Dashboard',  icon: Home,      roles: ['agent','supervisor','finance','admin'] },
-  { to: '/search',     label: 'Suche',      icon: Plane,     roles: ['agent','supervisor','admin'] },
-  { to: '/bookings',   label: 'Buchungen',  icon: BookOpen,  roles: ['agent','supervisor','admin'] },
-  { to: '/fare-watch', label: 'Preisalarm', icon: Bell,      roles: ['agent','supervisor','admin'] },
-  { to: '/analytics',  label: 'Analytics',  icon: BarChart2, roles: ['agent','supervisor','finance','admin'] },
-  { to: '/alerts',     label: 'Alarme',     icon: Bell,      roles: ['agent','supervisor','admin'] },
-  { to: '/billing',    label: 'Billing',    icon: CreditCard, roles: ['finance','admin'] },
-  { to: '/admin',      label: 'Admin',      icon: Shield,    roles: ['admin'] },
-]
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Layout() {
   const { email, role, logout } = useAuthStore()
+  const { t } = useTranslation()
   const nav = useNavigate()
+
+  const NAV = [
+    { to: '/',           label: t('nav.dashboard'),  icon: Home,      roles: ['agent','supervisor','finance','admin'] },
+    { to: '/search',     label: t('nav.search'),      icon: Plane,     roles: ['agent','supervisor','admin'] },
+    { to: '/bookings',   label: t('nav.bookings'),    icon: BookOpen,  roles: ['agent','supervisor','admin'] },
+    { to: '/fare-watch', label: t('nav.fareWatch'),   icon: Bell,      roles: ['agent','supervisor','admin'] },
+    { to: '/analytics',  label: t('nav.analytics'),   icon: BarChart2, roles: ['agent','supervisor','finance','admin'] },
+    { to: '/alerts',     label: t('nav.alerts'),      icon: Bell,      roles: ['agent','supervisor','admin'] },
+    { to: '/billing',    label: t('nav.billing'),     icon: CreditCard, roles: ['finance','admin'] },
+    { to: '/admin',      label: t('nav.admin'),       icon: Shield,    roles: ['admin'] },
+  ]
 
   function handleLogout() {
     logout()
@@ -48,7 +51,8 @@ export default function Layout() {
             </NavLink>
           ))}
           <div className="ml-auto flex items-center gap-3">
-            <span className="text-teal-100 text-sm hidden sm:block">
+            <LanguageSwitcher />
+            <span className="text-teal-100 text-sm hidden lg:block">
               {email} · <span className="text-white font-semibold">{role}</span>
             </span>
             <NavLink
@@ -63,7 +67,7 @@ export default function Layout() {
               onClick={handleLogout}
               className="flex items-center gap-1 text-teal-100 hover:text-white text-sm transition-colors"
             >
-              <LogOut size={15} /> Logout
+              <LogOut size={15} /> {t('nav.logout')}
             </button>
           </div>
         </div>

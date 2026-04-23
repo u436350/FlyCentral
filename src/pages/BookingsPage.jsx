@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import api from '../lib/api'
 import toast from 'react-hot-toast'
 import Card from '../components/Card'
 import Btn from '../components/Btn'
-import { RefreshCw, MessageSquare, Printer, Search } from 'lucide-react'
+import { RefreshCw, MessageSquare, Printer, Search, Download, CreditCard } from 'lucide-react'
 
 function fmtDt(s) {
   if (!s) return '–'
@@ -145,11 +146,85 @@ function ActionModal({ booking, action, onClose, onDone }) {
 }
 
 function TicketModal({ booking, onClose }) {
+  const { t } = useTranslation()
   const names = Array.isArray(booking.passenger_names)
     ? booking.passenger_names
     : JSON.parse(booking.passenger_names || '[]')
 
   function print() { window.print() }
+
+  async function downloadPdf() {
+    try {
+      const { jsPDF } = await import('jspdf')
+      const doc = new jsPDF({ unit: 'mm', format: 'a5', orientation: 'landscape' })
+
+      // Background
+      doc.setFillColor(13, 148, 136)
+      doc.rect(0, 0, 210, 40, 'F')
+
+      // Title
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(8)
+      doc.text('FlyCentral – Boarding Pass', 10, 10)
+      doc.setFontSize(20)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`${booking.origin || '???'} → ${booking.destination || '???'}`, 10, 28)
+
+      // Ticket number
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'normal')
+      doc.text('Ticket:', 160, 18)
+      doc.setFont('courier', 'bold')
+      doc.setFontSize(9)
+      doc.text(booking.ticket_number || 'N/A', 160, 25)
+
+      // Body
+      doc.setTextColor(50, 50, 50)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(9)
+
+      const lines = [
+        ['Buchungs-ID:', booking.id],
+        ['Flug-ID:',     booking.flight_id],
+        ['Airline:',     booking.airline || '–'],
+        ['Abflug:',      booking.departure_at ? new Date(booking.departure_at).toLocaleString('de-DE') : '–'],
+        ['Preis:',       `${parseFloat(booking.paid_price).toFixed(2)} EUR`],
+        ['Status:',      booking.status],
+        ['Passagiere:',  names.join(', ')],
+      ]
+
+      let y = 52
+      lines.forEach(([label, value]) => {
+        doc.setFont('helvetica', 'bold')
+        doc.text(label, 10, y)
+        doc.setFont('helvetica', 'normal')
+        doc.text(String(value), 55, y)
+        y += 10
+      })
+
+      // Footer
+      doc.setFontSize(7)
+      doc.setTextColor(150)
+      doc.text('Dieses Ticket wurde automatisch von FlyCentral generiert.', 10, 135)
+      doc.text(`Generiert: ${new Date().toLocaleString('de-DE')}`, 10, 140)
+
+      doc.save(`ticket-${booking.id}.pdf`)
+      toast.success('PDF heruntergeladen!')
+    } catch (err) {
+      toast.error('PDF-Fehler: ' + err.message)
+    }
+  }
+
+  async function stripeCheckout() {
+    try {
+      const { data } = await api.post(`/stripe/checkout/${booking.id}`)
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url
+      } else {
+        toast.error('Stripe nicht konfiguriert – nutze "Bezahlen" im Aktionsmenü')
+      }
+    } catch (err) { toast.error(err.message) }
+  }
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
@@ -213,11 +288,19 @@ function TicketModal({ booking, onClose }) {
           </div>
         </div>
 
-        <div className="px-5 pb-5 flex gap-2">
-          <Btn onClick={print} variant="secondary" className="flex-1">
+        <div className="px-5 pb-5 flex gap-2 flex-wrap">
+          <Btn onClick={print} variant="secondary" size="sm">
             <Printer size={14} /> Drucken
           </Btn>
-          <Btn onClick={onClose} className="flex-1">Schließen</Btn>
+          <Btn onClick={downloadPdf} variant="outline" size="sm">
+            <Download size={14} /> PDF
+          </Btn>
+          {booking.payment_status !== 'paid' && (
+            <Btn onClick={stripeCheckout} variant="primary" size="sm">
+              <CreditCard size={14} /> Stripe
+            </Btn>
+          )}
+          <Btn onClick={onClose} variant="secondary" size="sm" className="ml-auto">Schließen</Btn>
         </div>
       </div>
     </div>

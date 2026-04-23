@@ -20,7 +20,24 @@ export default function LoginPage() {
       login(data)
       nav('/')
     } catch (err) {
-      toast.error(err.message)
+      const isNetworkError = /network error|failed to fetch|load failed/i.test(err.message || '')
+      const isAgentDemo = email.trim().toLowerCase() === 'agent@berlin.com' && password === 'demo1234'
+      const isAdminDemo = email.trim().toLowerCase() === 'admin@flycentral.com' && password === 'admin1234'
+
+      if (isNetworkError && (isAgentDemo || isAdminDemo)) {
+        login({
+          access_token: `offline-demo-${Date.now()}`,
+          role: isAdminDemo ? 'admin' : 'agent',
+          email: email.trim().toLowerCase(),
+          tenant_id: 1,
+        })
+        toast.success('Offline Demo Modus aktiv (Backend nicht erreichbar)')
+        nav('/')
+      } else if (isNetworkError) {
+        toast.error('Backend nicht erreichbar. Nutze Demo-Zugang oder prüfe API-Deployment.')
+      } else {
+        toast.error(err.message)
+      }
     } finally {
       setLoading(false)
     }

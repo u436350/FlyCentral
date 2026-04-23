@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import api from '../lib/api'
+import api, { getActiveApiBaseUrl } from '../lib/api'
 import Card from '../components/Card'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, PieChart, Pie, Cell } from 'recharts'
 import { useAuthStore } from '../store/authStore'
 import { Download } from 'lucide-react'
 
-const API_URL = import.meta.env.VITE_API_URL || ''
+const API_URL = getActiveApiBaseUrl()
 
 export default function AnalyticsPage() {
   const { role } = useAuthStore()

@@ -33,7 +33,9 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API_URL: https://flycentral-backend.onrender.com
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://flycentral-backend.onrender.com' }}
+          VITE_ENABLE_DEMO_FALLBACK: "false"
+          VITE_ENABLE_API_URL_FAILOVER: "false"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

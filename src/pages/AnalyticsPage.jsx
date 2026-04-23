@@ -5,10 +5,9 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContai
 import { useAuthStore } from '../store/authStore'
 import { Download } from 'lucide-react'
 
-const API_URL = getActiveApiBaseUrl()
-
 export default function AnalyticsPage() {
   const { role } = useAuthStore()
+  const apiBase = getActiveApiBaseUrl()
 
   const { data, isLoading } = useQuery({
     queryKey: ['analytics'],
@@ -54,7 +53,7 @@ export default function AnalyticsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">📊 Analytics & Reports</h1>
         <a
-          href={`${API_URL}/api/analytics/export?format=csv`}
+          href={`${apiBase}/api/analytics/export?format=csv`}
           download="flycentral-export.csv"
           className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
         >

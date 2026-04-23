@@ -2,21 +2,35 @@ import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
 
 const STORAGE_KEY = 'flycentral-api-base-url'
+const DEMO_FALLBACK_ENABLED = import.meta.env.VITE_ENABLE_DEMO_FALLBACK === 'true'
+const API_FAILOVER_ENABLED = import.meta.env.VITE_ENABLE_API_URL_FAILOVER === 'true'
+const CONFIGURED_API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_URL)
 
-const FALLBACK_BASE_URLS = [
-  import.meta.env.VITE_API_URL,
-  'https://flycentral-backend.onrender.com',
-  'https://flycentral-api.onrender.com',
-].filter(Boolean)
+const FALLBACK_BASE_URLS = API_FAILOVER_ENABLED
+  ? [
+      CONFIGURED_API_BASE_URL,
+      'https://flycentral-backend.onrender.com',
+      'https://flycentral-api.onrender.com',
+    ].filter(Boolean)
+  : [CONFIGURED_API_BASE_URL].filter(Boolean)
 
 function normalizeBaseUrl(url) {
   return String(url || '').trim().replace(/\/$/, '')
 }
 
-let activeBaseUrl = normalizeBaseUrl(localStorage.getItem(STORAGE_KEY) || FALLBACK_BASE_URLS[0] || '')
+const storedBaseUrl = normalizeBaseUrl(localStorage.getItem(STORAGE_KEY) || '')
+let activeBaseUrl = CONFIGURED_API_BASE_URL || storedBaseUrl || FALLBACK_BASE_URLS[0] || ''
+
+if (CONFIGURED_API_BASE_URL && !API_FAILOVER_ENABLED) {
+  activeBaseUrl = CONFIGURED_API_BASE_URL
+}
 
 export function getActiveApiBaseUrl() {
   return activeBaseUrl
+}
+
+export function isDemoFallbackEnabled() {
+  return DEMO_FALLBACK_ENABLED
 }
 
 function setActiveApiBaseUrl(nextUrl) {
@@ -356,10 +370,11 @@ function getMockData(config) {
 }
 
 async function switchToNextBaseUrl() {
+  const candidates = [...new Set(FALLBACK_BASE_URLS.map(normalizeBaseUrl).filter(Boolean))]
+  if (candidates.length < 2) return false
   if (isSwitchingBaseUrl) return false
   isSwitchingBaseUrl = true
   try {
-    const candidates = [...new Set(FALLBACK_BASE_URLS.map(normalizeBaseUrl).filter(Boolean))]
     const currentIndex = candidates.indexOf(activeBaseUrl)
     const nextIndex = currentIndex >= 0 ? currentIndex + 1 : 0
     const next = candidates[nextIndex]
@@ -396,7 +411,7 @@ api.interceptors.response.use(
       }
     }
 
-    if (isNetworkError) {
+    if (isNetworkError && DEMO_FALLBACK_ENABLED) {
       return mockResponse(originalRequest, getMockData(originalRequest), 200)
     }
 

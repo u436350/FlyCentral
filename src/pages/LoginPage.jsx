@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
-import api from '../lib/api'
+import api, { isDemoFallbackEnabled } from '../lib/api'
 import toast from 'react-hot-toast'
 import { Plane } from 'lucide-react'
+
+const DEMO_FALLBACK_ENABLED = isDemoFallbackEnabled()
 
 export default function LoginPage() {
   const [email, setEmail]     = useState('')
@@ -24,7 +26,7 @@ export default function LoginPage() {
       const isAgentDemo = email.trim().toLowerCase() === 'agent@berlin.com' && password === 'demo1234'
       const isAdminDemo = email.trim().toLowerCase() === 'admin@flycentral.com' && password === 'admin1234'
 
-      if (isNetworkError && (isAgentDemo || isAdminDemo)) {
+      if (DEMO_FALLBACK_ENABLED && isNetworkError && (isAgentDemo || isAdminDemo)) {
         login({
           access_token: `offline-demo-${Date.now()}`,
           role: isAdminDemo ? 'admin' : 'agent',
@@ -33,8 +35,10 @@ export default function LoginPage() {
         })
         toast.success('Offline Demo Modus aktiv (Backend nicht erreichbar)')
         nav('/')
-      } else if (isNetworkError) {
+      } else if (isNetworkError && DEMO_FALLBACK_ENABLED) {
         toast.error('Backend nicht erreichbar. Nutze Demo-Zugang oder prüfe API-Deployment.')
+      } else if (isNetworkError) {
+        toast.error('Backend nicht erreichbar. Bitte API URL/CORS prüfen.')
       } else {
         toast.error(err.message)
       }

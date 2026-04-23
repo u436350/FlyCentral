@@ -37,7 +37,7 @@ export default function App() {
   const { token } = useAuthStore()
   return (
     <QueryClientProvider client={qc}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
         <Routes>
           <Route path="/login"    element={token ? <Navigate to="/" /> : <LoginPage />} />

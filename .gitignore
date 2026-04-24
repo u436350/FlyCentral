@@ -21,15 +21,6 @@ __pycache__/
 *.db-wal
 .env
 
-# Frontend files (not part of Python backend)
-package.json
-package-lock.json
-vite.config.js
-index.html
-eslint.config.js
-tsconfig.json
-src/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

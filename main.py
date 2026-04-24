@@ -1718,11 +1718,13 @@ def _ensure_demo_users() -> None:
             )
 
 
+# ── Auto-initialize DB (runs whether started via gunicorn or directly) ────────
+init_db()
+_seed()
+_ensure_demo_users()
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    init_db()
-    _seed()
-    _ensure_demo_users()
     port = int(os.environ.get("PORT", 4000))
     print(f"\n  FlyCentral SaaS v0.3 startet auf http://localhost:{port}\n")
     print("  Demo-Zugaenge:")

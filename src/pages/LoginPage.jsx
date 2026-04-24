@@ -22,25 +22,27 @@ export default function LoginPage() {
       login(data)
       nav('/')
     } catch (err) {
-      const isNetworkError = /network error|failed to fetch|load failed/i.test(err.message || '')
+      const status = err.response?.status
+      const isBackendUnavailable = !err.response || status === 0 || status >= 500 || status === 404
+      const isWrongCredentials = status === 401 || status === 403
       const isAgentDemo = email.trim().toLowerCase() === 'agent@berlin.com' && password === 'demo1234'
       const isAdminDemo = email.trim().toLowerCase() === 'admin@flycentral.com' && password === 'admin1234'
 
-      if (DEMO_FALLBACK_ENABLED && isNetworkError && (isAgentDemo || isAdminDemo)) {
+      if (isWrongCredentials) {
+        toast.error('E-Mail oder Passwort falsch.')
+      } else if (DEMO_FALLBACK_ENABLED && isBackendUnavailable && (isAgentDemo || isAdminDemo)) {
         login({
           access_token: `offline-demo-${Date.now()}`,
           role: isAdminDemo ? 'admin' : 'agent',
           email: email.trim().toLowerCase(),
           tenant_id: 1,
         })
-        toast.success('Offline Demo Modus aktiv (Backend nicht erreichbar)')
+        toast.success('Demo Modus aktiv (Backend nicht erreichbar)')
         nav('/')
-      } else if (isNetworkError && DEMO_FALLBACK_ENABLED) {
-        toast.error('Backend nicht erreichbar. Nutze Demo-Zugang oder prüfe API-Deployment.')
-      } else if (isNetworkError) {
-        toast.error('Backend nicht erreichbar. Bitte API URL/CORS prüfen.')
+      } else if (DEMO_FALLBACK_ENABLED && isBackendUnavailable) {
+        toast.error('Backend nicht erreichbar. Bitte Demo-Zugangsdaten verwenden.')
       } else {
-        toast.error(err.message)
+        toast.error(err.response?.data?.error || err.message || 'Ein Fehler ist aufgetreten.')
       }
     } finally {
       setLoading(false)

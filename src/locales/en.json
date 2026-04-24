@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "search": "Search",
+    "bookings": "Bookings",
+    "fareWatch": "Price Alerts",
+    "analytics": "Analytics",
+    "alerts": "Alerts",
+    "billing": "Billing",
+    "admin": "Admin",
+    "profile": "Profile",
+    "logout": "Sign out"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "search": "Search",
+    "close": "Close",
+    "back": "Back",
+    "confirm": "Confirm",
+    "reset": "Reset",
+    "download": "Download",
+    "print": "Print",
+    "noData": "No data available",
+    "error": "Error"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "loginBtn": "Sign in",
+    "registerBtn": "Create account",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "dashboard": {
+    "greeting": "Welcome",
+    "stats": {
+      "bookings": "Bookings",
+      "revenue": "Revenue",
+      "agents": "Agents",
+      "pending": "Pending"
+    },
+    "quickActions": "Quick actions",
+    "newBooking": "New booking",
+    "recentBookings": "Recent bookings"
+  },
+  "search": {
+    "title": "Search flights",
+    "origin": "Origin",
+    "destination": "Destination",
+    "date": "Date",
+    "maxPrice": "Max price",
+    "searchBtn": "Search",
+    "results": "Results",
+    "noResults": "No flights found",
+    "book": "Book",
+    "price": "Price",
+    "duration": "Duration",
+    "stops": "Stops",
+    "nonstop": "Nonstop",
+    "stop": "stop",
+    "stops_plural": "stops"
+  },
+  "bookings": {
+    "title": "Bookings",
+    "ticket": "Ticket",
+    "passenger": "Passenger",
+    "status": "Status",
+    "payment": "Payment",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "ticketed": "Ticketed",
+    "reserved": "Reserved",
+    "cancelled": "Cancelled",
+    "cancel": "Cancel",
+    "pay": "Pay",
+    "checkout": "Checkout",
+    "stripeCheckout": "Pay with Stripe",
+    "filterSearch": "Search booking…",
+    "filterStatus": "All statuses",
+    "filterPayment": "All payments",
+    "results": "results",
+    "ticketModal": {
+      "title": "Boarding Pass",
+      "from": "From",
+      "to": "To",
+      "flight": "Flight",
+      "departure": "Departure",
+      "arrival": "Arrival",
+      "passengers": "Passengers",
+      "seat": "Seat",
+      "class": "Class",
+      "economy": "Economy",
+      "downloadPdf": "Download PDF"
+    }
+  },
+  "fareWatch": {
+    "title": "Price Alerts",
+    "addAlert": "Add alert",
+    "origin": "From",
+    "destination": "To",
+    "maxPrice": "Max price (€)",
+    "departureDate": "Date (optional)",
+    "checkPrices": "Check prices now",
+    "checking": "Checking…",
+    "active": "active",
+    "triggered": "triggered",
+    "noAlerts": "No alerts yet"
+  },
+  "profile": {
+    "title": "Profile",
+    "account": "Account",
+    "changePassword": "Change password",
+    "oldPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "savePassword": "Save password",
+    "passwordChanged": "Password changed successfully"
+  },
+  "language": {
+    "select": "Language",
+    "de": "Deutsch",
+    "en": "English",
+    "tr": "Türkçe"
+  }
+}

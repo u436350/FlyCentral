@@ -1,16 +1,32 @@
 """SQLite persistence layer for FlyCentral – Python stdlib only, no pip needed."""
 from __future__ import annotations
 
+import os
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / "flycentral.db"
+def _resolve_db_path() -> Path:
+    # Render services have ephemeral writable storage in /tmp.
+    custom_path = os.environ.get("FLYCENTRAL_DB_PATH", "").strip()
+    if custom_path:
+        return Path(custom_path)
+    if os.environ.get("RENDER_SERVICE_ID"):
+        return Path("/tmp/flycentral.db")
+    return Path(__file__).parent / "flycentral.db"
+
+
+DB_PATH = _resolve_db_path()
 
 
 def get_conn() -> sqlite3.Connection:
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+    except sqlite3.OperationalError:
+        # Some hosted environments may not support WAL on their filesystem.
+        pass
     conn.execute("PRAGMA foreign_keys=ON")
     return conn
 

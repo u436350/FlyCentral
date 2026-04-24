@@ -1660,6 +1660,13 @@ def serve_index():
     return send_from_directory(str(STATIC_DIR), "index.html")
 
 
+@app.get("/api/health")
+def health_check():
+    with get_conn() as conn:
+        conn.execute("SELECT 1").fetchone()
+    return jsonify({"status": "ok", "service": "flycentral-api"})
+
+
 @app.get("/<path:path>")
 def serve_static(path: str):
     target = STATIC_DIR / path

@@ -5,6 +5,9 @@ const STORAGE_KEY = 'flycentral-api-base-url'
 const DEMO_FALLBACK_ENABLED = import.meta.env.VITE_ENABLE_DEMO_FALLBACK === 'true'
 const API_FAILOVER_ENABLED = import.meta.env.VITE_ENABLE_API_URL_FAILOVER === 'true'
 const CONFIGURED_API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_URL)
+const INVALID_BASE_URLS = new Set([
+  'https://flycentral-api.onrender.com',
+])
 
 const FALLBACK_BASE_URLS = API_FAILOVER_ENABLED
   ? [
@@ -17,7 +20,19 @@ function normalizeBaseUrl(url) {
   return String(url || '').trim().replace(/\/$/, '')
 }
 
-const storedBaseUrl = normalizeBaseUrl(localStorage.getItem(STORAGE_KEY) || '')
+function sanitizeStoredBaseUrl(url) {
+  const normalized = normalizeBaseUrl(url)
+  if (!normalized) return ''
+
+  if (INVALID_BASE_URLS.has(normalized)) {
+    localStorage.removeItem(STORAGE_KEY)
+    return ''
+  }
+
+  return normalized
+}
+
+const storedBaseUrl = sanitizeStoredBaseUrl(localStorage.getItem(STORAGE_KEY) || '')
 let activeBaseUrl = CONFIGURED_API_BASE_URL || storedBaseUrl || FALLBACK_BASE_URLS[0] || ''
 
 if (CONFIGURED_API_BASE_URL && !API_FAILOVER_ENABLED) {

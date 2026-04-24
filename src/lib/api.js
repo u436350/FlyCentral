@@ -9,7 +9,6 @@ const CONFIGURED_API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_URL)
 const FALLBACK_BASE_URLS = API_FAILOVER_ENABLED
   ? [
       CONFIGURED_API_BASE_URL,
-      'https://flycentral-backend.onrender.com',
       'https://flycentral-api.onrender.com',
     ].filter(Boolean)
   : [CONFIGURED_API_BASE_URL].filter(Boolean)

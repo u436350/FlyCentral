@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://flycentral-backend.onrender.com' }}
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://flycentral-api.onrender.com' }}
           VITE_ENABLE_DEMO_FALLBACK: ${{ vars.VITE_ENABLE_DEMO_FALLBACK || 'true' }}
           VITE_ENABLE_API_URL_FAILOVER: ${{ vars.VITE_ENABLE_API_URL_FAILOVER || 'true' }}
 

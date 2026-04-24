@@ -27,9 +27,10 @@ export default function PushNotificationsPage() {
       const permission = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission()
       if (permission !== 'granted') throw new Error('Berechtigung abgelehnt')
 
-      // Service Worker registrieren (falls nicht vorhanden)
+      // Push notifications still use the service worker, but it must be
+      // registered from the GitHub Pages base path.
       try {
-        await navigator.serviceWorker.register('/sw.js').catch(() => {
+        await navigator.serviceWorker.register('/FlyCentral/sw.js?v=4').catch(() => {
           // Falls sw.js nicht existiert ist das OK, wir simulieren
         })
       } catch (e) {

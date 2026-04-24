@@ -1657,7 +1657,14 @@ def export_my_payments_csv():
 # ── Serve SPA ─────────────────────────────────────────────────────────────────
 @app.get("/")
 def serve_index():
-    return send_from_directory(str(STATIC_DIR), "index.html")
+    index_file = STATIC_DIR / "index.html"
+    if index_file.is_file():
+        return send_from_directory(str(STATIC_DIR), "index.html")
+    return jsonify({
+        "service": "flycentral-api",
+        "status": "ok",
+        "message": "API is running. Use /api/health or /api/auth/login.",
+    })
 
 
 @app.get("/api/health")
@@ -1672,7 +1679,10 @@ def serve_static(path: str):
     target = STATIC_DIR / path
     if target.is_file():
         return send_from_directory(str(STATIC_DIR), path)
-    return send_from_directory(str(STATIC_DIR), "index.html")
+    index_file = STATIC_DIR / "index.html"
+    if index_file.is_file():
+        return send_from_directory(str(STATIC_DIR), "index.html")
+    return jsonify({"error": "Not found"}), 404
 
 
 # ── Seed initial data if DB is empty ──────────────────────────────────────────

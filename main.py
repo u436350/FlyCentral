@@ -942,6 +942,25 @@ def admin_analytics():
 
 
 # ── Notifications ─────────────────────────────────────────────────────────────
+@app.get("/api/stats")
+@require_auth
+def get_stats():
+    tid = request.current_user["tenant_id"]
+    with get_conn() as conn:
+        bookings = conn.execute(
+            "SELECT COUNT(*) FROM bookings WHERE tenant_id=?",
+            (tid,)
+        ).fetchone()[0]
+        unread_notifications = conn.execute(
+            "SELECT COUNT(*) FROM notifications WHERE tenant_id=? AND COALESCE(read, 0)=0",
+            (tid,)
+        ).fetchone()[0]
+    return jsonify({
+        "bookings": bookings,
+        "unread_notifications": unread_notifications,
+    })
+
+
 @app.get("/api/notifications")
 @require_auth
 def get_notifications():

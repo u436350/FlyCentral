@@ -2,7 +2,7 @@
   "name": "FlyCentral – Travel Agency Platform",
   "short_name": "FlyCentral",
   "description": "Reisebüro SaaS Plattform — Buchungen, CRM, Analytics",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0f172a",
@@ -11,13 +11,13 @@
   "categories": ["business", "travel"],
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -29,15 +29,15 @@
       "name": "Buchungen",
       "short_name": "Buchungen",
       "description": "Alle Buchungen anzeigen",
-      "url": "/bookings",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "url": "./bookings",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Neue Suche",
       "short_name": "Suche",
       "description": "Flug suchen",
-      "url": "/search",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "url": "./search",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

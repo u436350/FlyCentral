@@ -43,7 +43,7 @@ from uuid import uuid4
 
 from flask import Flask, jsonify, request, send_from_directory, Response
 from flask_cors import CORS
-from itsdangerous import URLSafeTimedSerializer, BadTimeSignature, SignatureExpired
+from itsdangerous import URLSafeTimedSerializer, BadSignature, BadTimeSignature, SignatureExpired
 
 from database import get_conn, init_db, row_to_dict
 from flight_market import build_catalog_metadata, flight_provider_status, search_market_flights
@@ -188,7 +188,7 @@ def decode_token(token: str) -> dict:
         return token_signer.loads(token, max_age=TOKEN_HOURS * 3600)
     except SignatureExpired as exc:
         raise TokenExpiredError("token expired") from exc
-    except BadTimeSignature as exc:
+    except (BadSignature, BadTimeSignature, TypeError, ValueError) as exc:
         raise TokenInvalidError("invalid token") from exc
 
 

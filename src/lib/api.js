@@ -4,7 +4,10 @@ import { useAuthStore } from '../store/authStore'
 const STORAGE_KEY = 'flycentral-api-base-url'
 const DEMO_FALLBACK_ENABLED = import.meta.env.VITE_ENABLE_DEMO_FALLBACK === 'true'
 const API_FAILOVER_ENABLED = import.meta.env.VITE_ENABLE_API_URL_FAILOVER === 'true'
-const CONFIGURED_API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_URL)
+const DEFAULT_API_BASE_URL = import.meta.env.DEV
+  ? 'http://localhost:4001'
+  : 'https://flycentral.onrender.com'
+const CONFIGURED_API_BASE_URL = normalizeBaseUrl(import.meta.env.VITE_API_URL || DEFAULT_API_BASE_URL)
 const INVALID_BASE_URLS = new Set([
   'https://flycentral-api.onrender.com',
 ])
